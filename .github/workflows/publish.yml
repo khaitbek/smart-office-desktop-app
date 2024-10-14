@@ -78,16 +78,16 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Debian Bundle
-          path: ${{ github.workspace }}/src-tauri/target/release/bundle/deb/appname_${{ env.APP_VERSION }}_${{ matrix.deb }}.deb
+          path: ${{ github.workspace }}/src-tauri/target/release/bundle/deb/smart-office_${{ env.APP_VERSION }}_${{ matrix.deb }}.deb
 
       - name: Upload rpm bundle
         uses: actions/upload-artifact@v3
         with:
           name: RPM Bundle
-          path: ${{ github.workspace }}/src-tauri/target/release/bundle/rpm/appname-${{ env.APP_VERSION }}-1.${{ matrix.rpm }}.rpm
+          path: ${{ github.workspace }}/src-tauri/target/release/bundle/rpm/smart-office-${{ env.APP_VERSION }}-1.${{ matrix.rpm }}.rpm
 
       - name: Upload appimage bundle
         uses: actions/upload-artifact@v3
         with:
           name: AppImage Bundle
-          path: ${{ github.workspace }}/src-tauri/target/release/bundle/appimage/appname_${{ env.APP_VERSION }}_${{ matrix.appimage }}.AppImage
+          path: ${{ github.workspace }}/src-tauri/target/release/bundle/smart-office/smart-office_${{ env.APP_VERSION }}_${{ matrix.appimage }}.AppImage
