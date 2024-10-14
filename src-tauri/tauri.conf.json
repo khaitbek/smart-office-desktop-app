@@ -24,10 +24,9 @@
   "bundle": {
     "active": true,
     "targets": [
-      "app",
       "deb",
       "msi",
-      "rpm"  
+      "dmg"  
     ],
     "icon": [
       "icons/32x32.png",
