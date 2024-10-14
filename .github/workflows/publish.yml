@@ -65,10 +65,10 @@ jobs:
             apt-get install -y nodejs
 
             # Install frontend dependencies
-            pnpm install
+            npm install
 
             # Build the application
-            pnpm run tauri build -- --verbose
+            npm run tauri build -- --verbose
 
       - name: Get app version
         run: echo "APP_VERSION=$(jq -r .version src-tauri/tauri.conf.json)" >> $GITHUB_ENV
