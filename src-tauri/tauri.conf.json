@@ -29,7 +29,8 @@
     "targets": "all",
     "icon": [
       "icons/smart-office-logo.png",
-      "icons/Square32x32Logo.png"
+      "icons/Square32x32Logo.png",
+      "icons/icon.ico"
     ]
   }
 }
