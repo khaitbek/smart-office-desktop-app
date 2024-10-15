@@ -30,7 +30,8 @@
     "icon": [
       "icons/smart-office-logo.png",
       "icons/Square32x32Logo.png",
-      "icons/icon.ico"
+      "icons/icon.ico",
+      "icons/32x32.png"
     ]
   }
 }
