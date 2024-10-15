@@ -28,7 +28,8 @@
     "active": true,
     "targets": "all",
     "icon": [
-      "icons/smart-office-logo.png"
+      "icons/smart-office-logo.png",
+      "icons/Square32x32Logo.png"
     ]
   }
 }
