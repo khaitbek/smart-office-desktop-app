@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - release
+      - notification-service
 
 jobs:
   publish-tauri:
