@@ -30,6 +30,7 @@ function Index() {
   return (
     <div className="p-2">
       <h3>Welcome to Smart Office Desktop app!</h3>
+      <p>Test</p>
     </div>
   );
 }
