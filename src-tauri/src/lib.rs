@@ -23,6 +23,7 @@ async fn authenticate(username: &str, password: &str) -> Result<String, String> 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_websocket::init())
         .setup(|app| {
             // at least 1 menu item is required
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
@@ -34,7 +35,6 @@ pub fn run() {
                 .build(app)?;
             Ok(())
         })
-        
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![greet])
         .invoke_handler(tauri::generate_handler![authenticate])

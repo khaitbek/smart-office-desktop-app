@@ -65,6 +65,9 @@ importers:
       '@tauri-apps/plugin-sql':
         specifier: ~2
         version: 2.0.0
+      '@tauri-apps/plugin-websocket':
+        specifier: ~2
+        version: 2.0.0
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -1245,6 +1248,9 @@ packages:
 
   '@tauri-apps/plugin-sql@2.0.0':
     resolution: {integrity: sha512-H4dodCbRvmaHGx7/E1hPh/v7Qf8/pI0XjmRWgMkCeC8NSPXnjYcpm5+HUhBeHUM5zkB85/Mucg4gpQZ0Dj33gQ==}
+
+  '@tauri-apps/plugin-websocket@2.0.0':
+    resolution: {integrity: sha512-O2qRxZCljd4g+ceJhW7LfgQr+fg0fBBiAaLiMopoKL6TXKMnhBHOenp4nZ5/MoVTr77OQIDNO6Jp/c1YwiRVtQ==}
 
   '@types/babel__core@7.20.5':
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
@@ -3014,6 +3020,10 @@ snapshots:
       '@tauri-apps/api': 2.0.2
 
   '@tauri-apps/plugin-sql@2.0.0':
+    dependencies:
+      '@tauri-apps/api': 2.0.2
+
+  '@tauri-apps/plugin-websocket@2.0.0':
     dependencies:
       '@tauri-apps/api': 2.0.2
 

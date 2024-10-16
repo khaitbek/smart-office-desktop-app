@@ -2,6 +2,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 
 // services
 import UserService from "@/core/services/user.service";
+import { useWebSocket } from "@/lib/hooks/useWebSocket";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async ({ location }) => {
@@ -22,6 +23,10 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const userService = new UserService();
+  useWebSocket({
+    getUserStaffId: userService.getUserStaffId
+  });
   return (
     <div className="p-2">
       <h3>Welcome to Smart Office Desktop app!</h3>

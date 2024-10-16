@@ -12,6 +12,11 @@ class UserService {
     }
   }
 
+  async getUserStaffId(): Promise<string> {
+    const staffId = import.meta.env.STAFF_ID;
+    return staffId
+  }
+
   checkIfAuthorized(): boolean {
     const sessionService = new SessionService();
     const accessToken = sessionService.getAccessToken();
