@@ -24,13 +24,14 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const userService = new UserService();
-  useWebSocket({
+  const { data } = useWebSocket({
     getUserStaffId: userService.getUserStaffId
   });
   return (
     <div className="p-2">
       <h3>Welcome to Smart Office Desktop app!</h3>
       <p>Test</p>
+      {JSON.stringify(data)}
     </div>
   );
 }

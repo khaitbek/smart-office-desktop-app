@@ -1,9 +1,13 @@
+import { invoke } from '@tauri-apps/api/core';
 import { Centrifuge } from "centrifuge";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const useWebSocket = (deps: {
-    getUserStaffId: () => Promise<string>
+    getUserStaffId: () => Promise<string>,
+    refetchNotifications?: () => void;
 }) => {
+    const [data, setData] = useState<any>(null);
+
     const connect = async () => {
         // establish a connection
         const centrifuge = new Centrifuge(import.meta.env.CENTRIFUGE_PATH as string, {
@@ -18,7 +22,10 @@ export const useWebSocket = (deps: {
             const data = ctx.data as {
                 text: string;
             };
-            alert(data.text)
+            invoke("notify", {
+                message: data.text
+            })
+            deps.refetchNotifications?.();
         });
 
         notificationSubscription.subscribe();
@@ -29,5 +36,9 @@ export const useWebSocket = (deps: {
     useEffect(() => {
         connect();
     }, [])
+
+    return {
+        data
+    }
 
 }

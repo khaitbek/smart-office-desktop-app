@@ -1,14 +1,31 @@
 mod auth;
+use std::{
+    io::{read_to_string, Read},
+    path,
+};
+
 use auth::auth::sign_in;
 use tauri::{
     menu::{Menu, MenuItem},
-    tray::TrayIconBuilder,
+    tray::{self, TrayIconBuilder},
+    AppHandle,
 };
+use tauri_plugin_notification::NotificationExt;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
 fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
+}
+
+#[tauri::command]
+fn notify(app: AppHandle, message: &str) -> () {
+    app.notification()
+        .builder()
+        .title("Smart Office")
+        .body(message.to_string())
+        .show()
+        .unwrap();
 }
 
 #[tauri::command]
@@ -23,6 +40,7 @@ async fn authenticate(username: &str, password: &str) -> Result<String, String> 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_websocket::init())
         .setup(|app| {
             // at least 1 menu item is required
@@ -38,6 +56,7 @@ pub fn run() {
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![greet])
         .invoke_handler(tauri::generate_handler![authenticate])
+        .invoke_handler(tauri::generate_handler![notify])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
