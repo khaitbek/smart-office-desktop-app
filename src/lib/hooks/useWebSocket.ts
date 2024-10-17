@@ -6,7 +6,7 @@ export const useWebSocket = (deps: {
     getUserStaffId: () => Promise<string>,
     refetchNotifications?: () => void;
 }) => {
-    const [data, setData] = useState<any>(null);
+    const [data] = useState<any>(null);
 
     const connect = async () => {
         // establish a connection
