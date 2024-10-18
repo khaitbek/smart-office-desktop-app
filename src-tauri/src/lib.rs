@@ -54,9 +54,7 @@ pub fn run() {
             Ok(())
         })
         .plugin(tauri_plugin_shell::init())
-        .invoke_handler(tauri::generate_handler![greet])
-        .invoke_handler(tauri::generate_handler![authenticate])
-        .invoke_handler(tauri::generate_handler![notify])
+        .invoke_handler(tauri::generate_handler![authenticate, notify])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

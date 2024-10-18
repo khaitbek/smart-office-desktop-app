@@ -7,8 +7,9 @@
   ],
   "permissions": [
     "core:default",
-    "shell:allow-open",
+    "shell:default",
     "websocket:default",
-    "notification:default"
+    "notification:default",
+    "core:app:default"
   ]
 }
