@@ -1,22 +1,11 @@
 mod auth;
-use std::{
-    io::{read_to_string, Read},
-    path,
-};
-
 use auth::auth::sign_in;
 use tauri::{
     menu::{Menu, MenuItem},
-    tray::{self, TrayIconBuilder},
+    tray::TrayIconBuilder,
     AppHandle,
 };
 use tauri_plugin_notification::NotificationExt;
-
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
 
 #[tauri::command]
 fn notify(app: AppHandle, message: &str) -> () {
@@ -25,7 +14,12 @@ fn notify(app: AppHandle, message: &str) -> () {
         .title("Smart Office")
         .body(message.to_string())
         .show()
-        .unwrap();
+        .unwrap_or_else(|err| {
+            panic!(
+                "Error when tried to send a notification using the notify command! {:?}",
+                err
+            );
+        });
 }
 
 #[tauri::command]

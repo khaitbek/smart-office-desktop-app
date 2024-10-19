@@ -1,8 +1,4 @@
-import {
-    isPermissionGranted,
-    requestPermission,
-    sendNotification,
-} from '@tauri-apps/plugin-notification';
+import { invoke } from '@tauri-apps/api/core';
 import { Centrifuge } from "centrifuge";
 import { useEffect, useState } from "react";
 
@@ -26,21 +22,9 @@ export const useWebSocket = (deps: {
             const data = ctx.data as {
                 text: string;
             };
-            // invoke("notify", {
-            //     message: data.text
-            // })
-            let permissionGranted = await isPermissionGranted();
-
-            // If not we need to request it
-            if (!permissionGranted) {
-                const permission = await requestPermission();
-                permissionGranted = permission === 'granted';
-            }
-
-            // Once permission has been granted we can send the notification
-            if (permissionGranted) {
-                sendNotification({ title: 'Smart Office', body: data.text });
-            }
+            invoke("notify", {
+                message: data.text
+            })
             deps.refetchNotifications?.();
         });
 
