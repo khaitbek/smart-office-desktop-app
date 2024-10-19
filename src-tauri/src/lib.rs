@@ -9,12 +9,17 @@ use tauri_plugin_notification::NotificationExt;
 
 #[tauri::command]
 fn notify(app: AppHandle, message: &str) -> () {
+    print!("called notify with the message: {}", message);
     app.notification()
         .builder()
         .title("Smart Office")
         .body(message.to_string())
         .show()
         .unwrap_or_else(|err| {
+            println!(
+                "Error when tried to send a notification using the notify command! {:?}",
+                err
+            );
             panic!(
                 "Error when tried to send a notification using the notify command! {:?}",
                 err
