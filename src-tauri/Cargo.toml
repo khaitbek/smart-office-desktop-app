@@ -1,8 +1,8 @@
 [package]
-name = "smart-office-todo-app"
+name = "smart-office"
 version = "0.1.1"
 description = "Desktop app for smart-office.uz"
-authors = ["you"]
+authors = ["Hayitbek Yusupov"]
 edition = "2021"
 rust-version = "1.80"
 
@@ -20,8 +20,8 @@ incremental = true # Compile your binary in smaller steps.
 
 [profile.release]
 codegen-units = 1 # Allows LLVM to perform better optimization.
-opt-level = "s" # Prioritizes small binary size. Use `3` if you prefer speed.
-panic = "abort" # Higher performance by disabling panic handlers.
+opt-level = "s"   # Prioritizes small binary size. Use `3` if you prefer speed.
+panic = "abort"   # Higher performance by disabling panic handlers.
 
 
 [build-dependencies]
@@ -38,8 +38,5 @@ tauri-plugin-notification = "2.0.1"
 tauri-plugin-log = "2"
 # openssl = { version = "0.10", features = ["vendored"] }
 
-[target.armv7-unknown-linux-gnueabihf]
-linker = "arm-linux-gnueabihf-gcc"
-
-[target.aarch64-unknown-linux-gnu]
-linker = "aarch64-linux-gnu-gcc"
+[features]
+custom-protocol = ["tauri/custom-protocol"]
