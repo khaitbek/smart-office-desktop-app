@@ -6,6 +6,7 @@ export const useWebSocket = (deps: {
     getUserStaffId: () => Promise<string>,
     refetchNotifications?: () => void;
 }) => {
+    console.log("useWebsocket")
     const [data] = useState<any>(null);
 
     const connect = async () => {
@@ -19,6 +20,7 @@ export const useWebSocket = (deps: {
         const notificationSubscription = centrifuge.newSubscription(notificationSubscriptionPath);
 
         notificationSubscription.on("publication", async (ctx) => {
+            console.log("received", ctx)
             const data = ctx.data as {
                 text: string;
             };
