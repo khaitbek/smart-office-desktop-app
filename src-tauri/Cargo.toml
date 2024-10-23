@@ -39,9 +39,11 @@ tauri-plugin-notification = "2.0.1"
 tauri-plugin-log = "2"
 notify-rust = "4.11.3"
 tauri-plugin-os = "2"
+open = "5.3.0"
 
-
+[target.'cfg(windows)'.dependencies]
 winrt-notification = "0.5.1"
 tauri-winrt-notification = "0.5.0"
-open = "5.3.0"
+
+[target.'cfg(macos)'.dependencies]
 mac-notification-sys = "0.6.2"
