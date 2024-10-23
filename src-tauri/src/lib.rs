@@ -4,15 +4,17 @@ use tauri_winrt_notification::{Duration, Sound, Toast};
 mod auth;
 mod notification;
 use auth::auth::sign_in;
+use mac_notification_sys;
 use notify_rust::{Hint, Notification};
 use tauri::{
     menu::{Menu, MenuItem},
     tray::TrayIconBuilder,
-    AppHandle,
+    App, AppHandle, Manager,
 };
 
 #[tauri::command]
 fn notify(app_handle: AppHandle, message: &str, redirect: Option<String>) -> () {
+    // linux
     #[cfg(target_os = "linux")]
     Notification::new()
         .body(message)
@@ -35,7 +37,7 @@ fn notify(app_handle: AppHandle, message: &str, redirect: Option<String>) -> () 
             _ => (),
         });
 
-    let redirect_clone = redirect.clone();
+    // windows
     #[cfg(target_os = "windows")]
     Toast::new(Toast::POWERSHELL_APP_ID)
         .title("Smart Office")
@@ -43,7 +45,7 @@ fn notify(app_handle: AppHandle, message: &str, redirect: Option<String>) -> () 
         .sound(Some(Sound::SMS))
         .duration(Duration::Short)
         .on_activated(move |_| {
-            match redirect_clone.clone() {
+            match redirect.clone() {
                 Some(url) => {
                     println!("redirecting to... {url}");
                     if open::that(url).is_ok() {
@@ -57,6 +59,35 @@ fn notify(app_handle: AppHandle, message: &str, redirect: Option<String>) -> () 
         })
         .show()
         .expect("unable to toast");
+
+    // macos
+    #[cfg(target_os = "macos")]
+    let bundle = mac_notification_sys::get_bundle_identifier_or_default("firefox");
+    mac_notification_sys::set_application(&bundle).unwrap();
+
+    let result = mac_notification_sys::send_notification(
+        "NOW",
+        None,
+        "Without subtitle",
+        Some(Notification::new().sound("Blow")),
+    )
+    .unwrap();
+
+    match result {
+        mac_notification_sys::NotificationResponse::Click => {
+            println!("Clicked on the notification itself");
+            match redirect.clone() {
+                Some(url) => {
+                    println!("redirecting to... {url}");
+                    if open::that(url).is_ok() {
+                        println!("Look at your browser !");
+                    };
+                }
+                _ => {}
+            }
+        }
+        _ => {}
+    }
 }
 
 #[tauri::command]
