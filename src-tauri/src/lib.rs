@@ -1,6 +1,7 @@
 extern crate winrt_notification;
 use std::{process::exit, thread::sleep, time::Duration as StdDuration};
-use winrt_notification::{Duration, Sound, Toast};
+// use winrt_notification::{Duration, Sound, Toast};
+use tauri_winrt_notification::{Duration, Sound, Toast};
 mod auth;
 mod notification;
 use auth::auth::sign_in;

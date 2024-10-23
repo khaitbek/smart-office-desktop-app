@@ -42,3 +42,4 @@ tauri-plugin-os = "2"
 
 
 winrt-notification = "0.5.1"
+tauri-winrt-notification = "0.5.0"
