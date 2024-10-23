@@ -1,10 +1,20 @@
 extern crate open;
+
+// windows
+#[cfg(target_os = "windows")]
 extern crate winrt_notification;
+#[cfg(target_os = "windows")]
 use tauri_winrt_notification::{Duration, Sound, Toast};
+
+// local
 mod auth;
 mod notification;
 use auth::auth::sign_in;
+
+// macos
+#[cfg(target_os = "macos")]
 use mac_notification_sys;
+
 use notify_rust::{Hint, Notification};
 use tauri::{
     menu::{Menu, MenuItem},
