@@ -35,8 +35,8 @@ fn notify(app_handle: AppHandle, message: &str, redirect: Option<String>) -> () 
             _ => (),
         });
 
-    #[cfg(target_os = "windows")]
     let redirect_clone = redirect.clone();
+    #[cfg(target_os = "windows")]
     Toast::new(Toast::POWERSHELL_APP_ID)
         .title("Smart Office")
         .text1(message)
