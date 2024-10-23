@@ -1,4 +1,6 @@
+extern crate open;
 extern crate winrt_notification;
+// use open;
 use std::{process::exit, thread::sleep, time::Duration as StdDuration};
 // use winrt_notification::{Duration, Sound, Toast};
 use tauri_winrt_notification::{Duration, Sound, Toast};
@@ -14,7 +16,7 @@ use tauri::{
 use tauri_plugin_shell::ShellExt;
 
 #[tauri::command]
-fn notify(app_handle: AppHandle, message: &str, redirect: Option<&str>) -> () {
+fn notify(app_handle: AppHandle, message: &str, redirect: Option<String>) -> () {
     #[cfg(target_os = "linux")]
     Notification::new()
         .body(message)
@@ -28,12 +30,15 @@ fn notify(app_handle: AppHandle, message: &str, redirect: Option<&str>) -> () {
             "default" => match redirect {
                 Some(redirect) => {
                     println!("redirecting to... {redirect}");
-                    app_handle
-                        .shell()
-                        .open(redirect, None)
-                        .unwrap_or_else(|err| {
-                            println!("error when calling wait_for_action(), {:?}", err);
-                        });
+                    if open::that("https://rust-lang.org").is_ok() {
+                        println!("Look at your browser !");
+                    }
+                    // app_handle
+                    //     .shell()
+                    //     .open(redirect, None)
+                    //     .unwrap_or_else(|err| {
+                    //         println!("error when calling wait_for_action(), {:?}", err);
+                    //     });
                 }
                 None => {}
             },
@@ -79,40 +84,21 @@ fn notify(app_handle: AppHandle, message: &str, redirect: Option<&str>) -> () {
     //     Err(e) => println!("Could not show notification: {}", e),
     // }
 
-    #[cfg(target_os = "windows")]
+    // #[cfg(target_os = "windows")]
     Toast::new(Toast::POWERSHELL_APP_ID)
         .title("Smart Office")
         .text1(message)
         .sound(Some(Sound::SMS))
         .duration(Duration::Short)
-        .on_activated(move |action| {
-            match action {
-                Some(action) => match redirect {
-                    Some(redirect) => {
-                        println!("redirecting to... {redirect}");
-                        app_handle
-                            .shell()
-                            .open(redirect, None)
-                            .unwrap_or_else(|err| {
-                                println!("error when calling wait_for_action(), {:?}", err);
-                            });
-                    }
-                    None => {}
-                },
-                None => match redirect {
-                    Some(redirect) => {
-                        println!("redirecting to... {redirect}");
-                        app_handle
-                            .shell()
-                            .open(redirect, None)
-                            .unwrap_or_else(|err| {
-                                println!("error when calling wait_for_action(), {:?}", err);
-                            });
-                    }
-                    None => {}
-                },
-            }
-            exit(0);
+        .on_activated(|_| {
+            // let redirect = redirect.clone(); // Clone here before the closure
+            // move |action| {
+            println!("redirecting to...");
+            if open::that("https://rust-lang.org").is_ok() {
+                println!("Look at your browser !");
+            };
+            Ok(())
+            // }
         })
         .show()
         .expect("unable to toast");

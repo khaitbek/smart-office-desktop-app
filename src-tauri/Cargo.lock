@@ -3800,6 +3800,7 @@ name = "smart-office"
 version = "0.1.1"
 dependencies = [
  "notify-rust",
+ "open",
  "reqwest",
  "serde",
  "serde_json",
