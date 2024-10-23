@@ -11,6 +11,8 @@
     "websocket:default",
     "notification:default",
     "core:app:default",
-    "log:default"
+    "log:default",
+    "os:default",
+    "shell:default"
   ]
 }

@@ -1,4 +1,10 @@
-import { invoke } from '@tauri-apps/api/core';
+import NotificationService from '@/core/services/notification.service';
+import {
+    isPermissionGranted,
+    onAction,
+    requestPermission,
+    sendNotification
+} from '@tauri-apps/plugin-notification';
 import { Centrifuge } from "centrifuge";
 import { useEffect, useState } from "react";
 
@@ -6,7 +12,6 @@ export const useWebSocket = (deps: {
     getUserStaffId: () => Promise<string>,
     refetchNotifications?: () => void;
 }) => {
-    console.log("useWebsocket")
     const [data] = useState<any>(null);
 
     const connect = async () => {
@@ -19,41 +24,31 @@ export const useWebSocket = (deps: {
         const notificationSubscriptionPath = `smart-office-notification_${notificationSubscriptionStaffId}`
         const notificationSubscription = centrifuge.newSubscription(notificationSubscriptionPath);
 
-        notificationSubscription.on("publication", async (ctx) => {
-            console.log("received", ctx)
-            const data = ctx.data as {
-                text: string;
-            };
-            invoke("notify", {
-                message: data.text
-            })
-            if (!("Notification" in window)) {
-                // Check if the browser supports notifications
-                alert("This browser does not support desktop notification");
-            } else if (Notification.permission === "granted") {
-                // Check whether notification permissions have already been granted;
-                // if so, create a notification
-                new Notification("Hi there!");
-                // …
-            } else if (Notification.permission !== "denied") {
-                // We need to ask the user for permission
-                Notification.requestPermission().then((permission) => {
-                    // If the user accepts, let's create a notification
-                    if (permission === "granted") {
-                        new Notification("Hi there!");
-                        // …
-                    }
-                });
+        notificationSubscription.on("publication", async () => {
+            const notificationService = new NotificationService();
+            const notificationsCount = await notificationService.getLatestNotificationsCount();
+            const notifications = await notificationService.getLatest();
+            let permissionGranted = await isPermissionGranted();
+            console.log(notificationsCount) 
+            // If not we need to request it
+            if (!permissionGranted) {
+                const permission = await requestPermission();
+                permissionGranted = permission === 'granted';
             }
+            notifications?.forEach(notification => {
+                if (permissionGranted) {
 
-            // At last, if the user has denied notifications, and you
-            // want to be respectful there is no need to bother them anymore.
+                    sendNotification({ title: notification.title, body: notification.link, actionTypeId: "new-notification" });
+                    onAction((notification) => {
+                        console.log(notification)
+                    })
+                }
+            })
             deps.refetchNotifications?.();
         });
 
         notificationSubscription.subscribe();
         centrifuge.connect();
-
     }
 
     useEffect(() => {

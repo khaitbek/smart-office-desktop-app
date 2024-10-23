@@ -2,9 +2,9 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 
 // services
 import { Button } from "@/app/components/button";
+import NotificationService from "@/core/services/notification.service";
 import UserService from "@/core/services/user.service";
 import { useWebSocket } from "@/lib/hooks/useWebSocket";
-import { invoke } from "@tauri-apps/api/core";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async ({ location }) => {
@@ -26,18 +26,15 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const userService = new UserService();
-  const { data } = useWebSocket({
+  const notificationService = new NotificationService();
+  useWebSocket({
     getUserStaffId: userService.getUserStaffId
   });
   return (
     <div className="p-2">
       <h3>Welcome to Smart Office Desktop app!</h3>
-      <p>Test</p>
-      {JSON.stringify(data)}
       <Button onClick={() => {
-        invoke("notify", {
-          message: "hallo!"
-        })
+        notificationService.display("Hello!", "https://smart-office.uz")
       }}>
         Send a notification
       </Button>
