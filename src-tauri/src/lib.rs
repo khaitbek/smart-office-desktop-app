@@ -1,9 +1,5 @@
 extern crate open;
 extern crate winrt_notification;
-// use open;
-use reqwest::redirect;
-use std::{process::exit, thread::sleep, time::Duration as StdDuration};
-// use winrt_notification::{Duration, Sound, Toast};
 use tauri_winrt_notification::{Duration, Sound, Toast};
 mod auth;
 mod notification;
@@ -14,13 +10,10 @@ use tauri::{
     tray::TrayIconBuilder,
     AppHandle,
 };
-use tauri_plugin_shell::ShellExt;
 
 #[tauri::command]
 fn notify(app_handle: AppHandle, message: &str, redirect: Option<String>) -> () {
     #[cfg(target_os = "linux")]
-    let redirect_clone = redirect.clone();
-
     Notification::new()
         .body(message)
         .action("default", "default") // IDENTIFIER, LABEL
@@ -30,7 +23,7 @@ fn notify(app_handle: AppHandle, message: &str, redirect: Option<String>) -> () 
         .show()
         .unwrap()
         .wait_for_action(|action| match action {
-            "default" => match redirect_clone {
+            "default" => match redirect.clone() {
                 Some(url) => {
                     println!("redirecting to... {url}");
                     if open::that(url).is_ok() {
