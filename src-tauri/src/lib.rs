@@ -84,7 +84,7 @@ fn notify(app_handle: AppHandle, message: &str, redirect: Option<String>) -> () 
     //     Err(e) => println!("Could not show notification: {}", e),
     // }
 
-    // #[cfg(target_os = "windows")]
+    #[cfg(target_os = "windows")]
     Toast::new(Toast::POWERSHELL_APP_ID)
         .title("Smart Office")
         .text1(message)
