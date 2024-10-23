@@ -1,6 +1,7 @@
 extern crate open;
 extern crate winrt_notification;
 // use open;
+use reqwest::redirect;
 use std::{process::exit, thread::sleep, time::Duration as StdDuration};
 // use winrt_notification::{Duration, Sound, Toast};
 use tauri_winrt_notification::{Duration, Sound, Toast};
@@ -18,6 +19,8 @@ use tauri_plugin_shell::ShellExt;
 #[tauri::command]
 fn notify(app_handle: AppHandle, message: &str, redirect: Option<String>) -> () {
     #[cfg(target_os = "linux")]
+    let redirect_clone = redirect.clone();
+
     Notification::new()
         .body(message)
         .action("default", "default") // IDENTIFIER, LABEL
@@ -27,78 +30,37 @@ fn notify(app_handle: AppHandle, message: &str, redirect: Option<String>) -> () 
         .show()
         .unwrap()
         .wait_for_action(|action| match action {
-            "default" => match redirect {
-                Some(redirect) => {
-                    println!("redirecting to... {redirect}");
-                    if open::that("https://rust-lang.org").is_ok() {
+            "default" => match redirect_clone {
+                Some(url) => {
+                    println!("redirecting to... {url}");
+                    if open::that(url).is_ok() {
                         println!("Look at your browser !");
                     }
-                    // app_handle
-                    //     .shell()
-                    //     .open(redirect, None)
-                    //     .unwrap_or_else(|err| {
-                    //         println!("error when calling wait_for_action(), {:?}", err);
-                    //     });
                 }
                 None => {}
             },
             _ => (),
         });
 
-    // #[cfg(target_os = "macos")]
-    // let result = mac_notification_sys::send_notification(
-    //     "Smart Office",
-    //     None,
-    //     message,
-    //     Some(
-    //         mac_notification_sys::Notification::new()
-    //             .main_button(mac_notification_sys::MainButton::SingleAction("Open"))
-    //             .close_button("Close"),
-    //     ),
-    // );
-
-    // match result {
-    //     Ok(response) => match response {
-    //         mac_notification_sys::NotificationResponse::ActionButton(action_name) => {
-    //             if action_name == "Open" {
-    //                 println!("Clicked on open");
-    //                 match redirect {
-    //                     Some(redirect) => {
-    //                         app_handle.shell().open(redirect, None).unwrap();
-    //                     }
-    //                     None => {}
-    //                 }
-    //             }
-    //         }
-    //         mac_notification_sys::NotificationResponse::Click => {
-    //             println!("Clicked on the notification itself");
-    //             match redirect {
-    //                 Some(redirect) => {
-    //                     app_handle.shell().open(redirect, None).unwrap();
-    //                 }
-    //                 None => {}
-    //             }
-    //         }
-    //         _ => {}
-    //     },
-    //     Err(e) => println!("Could not show notification: {}", e),
-    // }
-
     #[cfg(target_os = "windows")]
+    let redirect_clone = redirect.clone();
     Toast::new(Toast::POWERSHELL_APP_ID)
         .title("Smart Office")
         .text1(message)
         .sound(Some(Sound::SMS))
         .duration(Duration::Short)
-        .on_activated(|_| {
-            // let redirect = redirect.clone(); // Clone here before the closure
-            // move |action| {
-            println!("redirecting to...");
-            if open::that("https://rust-lang.org").is_ok() {
-                println!("Look at your browser !");
-            };
+        .on_activated(move |_| {
+            match redirect_clone.clone() {
+                Some(url) => {
+                    println!("redirecting to... {url}");
+                    if open::that(url).is_ok() {
+                        println!("Look at your browser !");
+                    };
+                }
+                _ => {}
+            }
+
             Ok(())
-            // }
         })
         .show()
         .expect("unable to toast");
