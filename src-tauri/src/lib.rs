@@ -73,8 +73,11 @@ fn notify(app_handle: AppHandle, message: &str, redirect: Option<String>) -> () 
     // macos
     #[cfg(target_os = "macos")]
     let bundle = mac_notification_sys::get_bundle_identifier_or_default("firefox");
+
+    #[cfg(target_os = "macos")]
     mac_notification_sys::set_application(&bundle).unwrap();
 
+    #[cfg(target_os = "macos")]
     let result = mac_notification_sys::send_notification(
         "NOW",
         None,
@@ -83,6 +86,7 @@ fn notify(app_handle: AppHandle, message: &str, redirect: Option<String>) -> () 
     )
     .unwrap();
 
+    #[cfg(target_os = "macos")]
     match result {
         mac_notification_sys::NotificationResponse::Click => {
             println!("Clicked on the notification itself");
