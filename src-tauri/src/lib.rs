@@ -87,13 +87,33 @@ fn notify(app_handle: AppHandle, message: &str, redirect: Option<&str>) -> () {
         .duration(Duration::Short)
         .on_activated(move |action| {
             match action {
-                Some(action) => println!("You've clicked {}!", action),
-                None => println!("You've clicked me!"),
+                Some(action) => match redirect {
+                    Some(redirect) => {
+                        println!("redirecting to... {redirect}");
+                        app_handle
+                            .shell()
+                            .open(redirect, None)
+                            .unwrap_or_else(|err| {
+                                println!("error when calling wait_for_action(), {:?}", err);
+                            });
+                    }
+                    None => {}
+                },
+                None => match redirect {
+                    Some(redirect) => {
+                        println!("redirecting to... {redirect}");
+                        app_handle
+                            .shell()
+                            .open(redirect, None)
+                            .unwrap_or_else(|err| {
+                                println!("error when calling wait_for_action(), {:?}", err);
+                            });
+                    }
+                    None => {}
+                },
             }
             exit(0);
         })
-        .add_button("Yes", "yes")
-        .add_button("No", "no")
         .show()
         .expect("unable to toast");
 }
