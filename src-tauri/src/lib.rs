@@ -27,7 +27,13 @@ fn notify(app_handle: AppHandle, message: &str, redirect: Option<&str>) -> () {
         .wait_for_action(|action| match action {
             "default" => match redirect {
                 Some(redirect) => {
-                    app_handle.shell().open(redirect, None).unwrap();
+                    println!("redirecting to... {redirect}");
+                    app_handle
+                        .shell()
+                        .open(redirect, None)
+                        .unwrap_or_else(|err| {
+                            println!("error when calling wait_for_action(), {:?}", err);
+                        });
                 }
                 None => {}
             },
