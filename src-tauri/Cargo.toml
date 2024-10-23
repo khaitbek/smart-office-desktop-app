@@ -39,4 +39,6 @@ tauri-plugin-notification = "2.0.1"
 tauri-plugin-log = "2"
 notify-rust = "4.11.3"
 tauri-plugin-os = "2"
-# openssl = { version = "0.10", features = ["vendored"] }
+
+
+winrt-notification = "0.5.1"
