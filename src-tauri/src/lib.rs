@@ -82,7 +82,8 @@ fn notify(app_handle: AppHandle, message: &str, redirect: Option<String>) -> () 
         "NOW",
         None,
         "Without subtitle",
-        Some(Notification::new().sound("Blow")),
+        // Some(Notification::new().sound("Blow")),
+        None
     )
     .unwrap();
 
